@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flex Box Menu - Vanilla JS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet" />
+    <script
+      src="https://kit.fontawesome.com/e85828e76a.js"
+      crossorigin="anonymous"></script>
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        font-family: Roboto;
+        background-color: rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        color: #000;
+        letter-spacing: 0.5px;
+      }
+
+      /* nav-bar */
+
+      header {
+        background-color: white;
+        position: sticky;
+        top: 0;
+        min-height: 72px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        z-index: 99;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        flex: 1;
+      }
+      .nav-bar ul {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+      }
+      .nav-bar li {
+        flex: 0 3 auto;
+        list-style: none;
+        padding: 0 20px;
+        height: 100%;
+        position: relative;
+        font-size: 0.9rem;
+      }
+
+      .nav-bar li.logo {
+        display: flex;
+        align-items: center;
+        flex: 12 1 auto;
+      }
+
+      .nav-bar li.magnifying-glass {
+        flex: 1 1 auto;
+        cursor: pointer;
+      }
+
+      .nav-bar li a {
+        display: flex;
+        justify-content: center;
+        color: inherit;
+        text-decoration: none;
+      }
+      .nav-bar li.logo img {
+        height: 70px;
+      }
+
+      .sub-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+      }
+
+      #sub-menu {
+        cursor: pointer;
+      }
+      .sub-list li {
+        display: none;
+      }
+      .sub-list li.show {
+        display: flex;
+        padding: 5px 20px;
+        flex: 1 1 auto;
+      }
+
+      input {
+        all: unset;
+        display: inline-block;
+        max-width: 1%;
+        transition: all 2s linear;
+        font-family: Roboto;
+        font-weight: 200;
+      }
+
+      .fa-magnifying-glass {
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 2px 5px;
+        transition: all 2s linear;
+        max-width: 25%;
+      }
+
+      .unhide {
+        border: 1px solid black;
+        max-width: 100%;
+      }
+
+      .unhide_search {
+        max-width: 100%;
+      }
+      .highlight {
+        background-color: yellow;
+        color: black;
+        font-weight: bold;
+      }
+
+      @media (max-width: 767px) {
+        :root {
+          font-size: 12px;
+        }
+        .nav-bar img {
+          transform: scale(0.7);
+        }
+        .nav-bar li {
+          flex: 0 3 auto;
+
+          padding: 0 5px;
+          height: 100%;
+        }
+
+        .nav-bar li.logo {
+          flex: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="nav-bar">
+        <ul>
+          <li class="logo">
+            <a href="#"
+              ><img
+                src="https://cdn.pixabay.com/photo/2019/11/28/15/20/basketball-logo-4659381_1280.png"
+                alt="logo" />
+            </a>
+          </li>
+          <li id="sub-menu">
+            Offer <i class="fa-solid fa-chevron-down"></i>
+
+            <ul class="sub-list">
+              <li><a href="#">Projects</a></li>
+              <li><a href="#">Visualizations</a></li>
+              <li><a href="#">Realizations</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Company</a></li>
+          <li><a href="#">Realizations</a></li>
+          <li><a href="#">Contact</a></li>
+          <li class="magnifying-glass">
+            <i class="fa-solid fa-magnifying-glass">
+              <input id="searchInput" type="text" placeholder=""
+            /></i>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <script>
+      const subMenu = document.querySelector("#sub-menu");
+      const subListItems = document.querySelectorAll(".sub-list li");
+      const magnifyingGlass = document.querySelector("i.fa-magnifying-glass");
+      const searchInput = document.querySelector("#searchInput");
+      let isMenuOpen = false;
+      let isSearchUnhide = false;
+      // let isInputPressed = false;
+
+      function dropDownMenu() {
+        if (!isMenuOpen) {
+          subListItems.forEach((el) => el.classList.add("show"));
+          isMenuOpen = true;
+        } else {
+          subListItems.forEach((el) => el.classList.remove("show"));
+          isMenuOpen = false;
+        }
+      }
+
+      subMenu.addEventListener("mouseleave", () => {
+        if (isMenuOpen) {
+          subListItems.forEach((el) => el.classList.remove("show"));
+          isMenuOpen = false;
+        }
+      });
+
+      subMenu.addEventListener("click", dropDownMenu);
+
+      // search input
+
+      function unHideInput() {
+        if (!isSearchUnhide) {
+          magnifyingGlass.classList.add("unhide");
+          searchInput.classList.add("unhide_search");
+          searchInput.setAttribute("placeholder", "Search...");
+          searchInput.focus();
+          isSearchUnhide = true;
+        }
+      }
+
+      function HideInput() {
+        if (isSearchUnhide && !searchInput.value) {
+          magnifyingGlass.classList.remove("unhide");
+          searchInput.classList.remove("unhide_search");
+          searchInput.setAttribute("placeholder", "");
+          searchInput.blur();
+          isSearchUnhide = false;
+        }
+      }
+
+      magnifyingGlass.addEventListener("click", unHideInput);
+      magnifyingGlass.addEventListener("mouseleave", () => {
+        setTimeout(HideInput, 5000);
+      });
+    </script>
+  </body>
+</html>
